@@ -7,7 +7,7 @@ A workspace for learning OS concepts through code examples and experimentation.
 ```text
 OS/
 ├── process-control/     [Completed] Process management, scheduling, synchronization
-├── memory-management/   [Partially Completed] Paging, virtual memory, allocators
+├── memory-management/   [Completed] Paging, virtual memory, allocators
 ├── file-systems/        [Partially Completed] Inodes, allocation, journaling
 ├── io-systems/          [Partially Completed] Device drivers, interrupts, DMA
 └── ...more topics
@@ -36,7 +36,11 @@ Read [process-control/README.md](process-control/README.md) for the full guide.
 **Time**: 20-30 hours
 **[Start here →](process-control/README.md)**
 
-### 2. Memory Management [Partially Completed]
+**Memory Management Module**
+**Time**: 15-25 hours
+**[Start here →](memory-management/README.md)**
+
+### 2. Memory Management [Completed]
 - Virtual memory, paging, TLB
 - Page replacement (FIFO, LRU, Clock)
 - malloc/free implementation
