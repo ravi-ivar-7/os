@@ -8,7 +8,7 @@ A workspace for learning OS concepts through code examples and experimentation.
 OS/
 ├── process-control/     [Completed] Process management, scheduling, synchronization
 ├── memory-management/   [Completed] Paging, virtual memory, allocators
-├── file-systems/        [Partially Completed] Inodes, allocation, journaling
+├── file-systems/        [Completed] Inodes, allocation, journaling
 ├── io-systems/          [Partially Completed] Device drivers, interrupts, DMA
 └── ...more topics
 ```
