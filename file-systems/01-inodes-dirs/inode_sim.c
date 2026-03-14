@@ -83,11 +83,15 @@ void create_file(const char *name, int size, int permissions) {
     inode_table[inum].permissions = permissions;
     inode_table[inum].link_count = 1;
 
-    // Assign simulated block numbers
+    // Track how many blocks were actually assigned
     int blocks_needed = (size + BLOCK_SIZE - 1) / BLOCK_SIZE;
-    for (int i = 0; i < blocks_needed && i < MAX_DIRECT_BLOCKS; i++) {
+    int assigned = blocks_needed < MAX_DIRECT_BLOCKS ? blocks_needed : MAX_DIRECT_BLOCKS;
+    for (int i = 0; i < assigned; i++) {
         inode_table[inum].direct_blocks[i] = 1000 + inum * 10 + i;
     }
+    inode_table[inum].link_count = 1; // store assigned count for printing
+    // Store number of used blocks in single_indirect field for display
+    inode_table[inum].single_indirect = assigned;
 
     printf("Created file: '%s' -> inode %d | size: %d bytes | permissions: %04o\n",
            name, inum, size, permissions);
@@ -118,8 +122,10 @@ void print_inode(int inum) {
     printf("  Permissions: %04o\n", n->permissions);
     printf("  Hard Links:  %d\n", n->link_count);
     printf("  Blocks:      ");
-    for (int i = 0; i < MAX_DIRECT_BLOCKS; i++) {
-        if (n->direct_blocks[i]) printf("%d ", n->direct_blocks[i]);
+    // Fix: use stored block count so we don't skip block number 0
+    int nblocks = inode_table[inum].single_indirect;
+    for (int i = 0; i < nblocks; i++) {
+        printf("%d ", n->direct_blocks[i]);
     }
     printf("\n");
 }

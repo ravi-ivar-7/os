@@ -17,7 +17,7 @@ bool is_in_memory(int page, int frames[], int num_frames) {
 int simulate_fifo() {
     int frames[FRAMES];
     for (int i = 0; i < FRAMES; i++) frames[i] = -1;
-    
+
     int page_faults = 0;
     int index = 0;
 
@@ -35,43 +35,49 @@ int simulate_fifo() {
 int simulate_lru() {
     int frames[FRAMES];
     int last_used[FRAMES];
-    
+
     for (int i = 0; i < FRAMES; i++) {
         frames[i] = -1;
         last_used[i] = 0;
     }
-    
+
     int page_faults = 0;
-    int time = 0;
+    int timestamp = 0; // renamed from 'time' to avoid shadowing stdlib time()
 
     for (int i = 0; i < REFERENCE_STRING_LEN; i++) {
-        time++;
+        timestamp++;
         int page = reference_string[i];
-        
+
         bool found = false;
         for (int j = 0; j < FRAMES; j++) {
             if (frames[j] == page) {
-                last_used[j] = time;
+                last_used[j] = timestamp;
                 found = true;
                 break;
             }
         }
-        
+
         if (!found) {
-            int lru_index = 0;
-            int min_time = last_used[0];
-            for (int j = 1; j < FRAMES; j++) {
+            // Fix: first look for a genuinely empty slot, THEN find LRU victim
+            int victim = -1;
+            for (int j = 0; j < FRAMES; j++) {
                 if (frames[j] == -1) {
-                    lru_index = j;
-                    break; // Empty slot found
-                }
-                if (last_used[j] < min_time) {
-                    min_time = last_used[j];
-                    lru_index = j;
+                    victim = j;
+                    break;
                 }
             }
-            frames[lru_index] = page;
-            last_used[lru_index] = time;
+            if (victim == -1) {
+                int min_time = last_used[0];
+                victim = 0;
+                for (int j = 1; j < FRAMES; j++) {
+                    if (last_used[j] < min_time) {
+                        min_time = last_used[j];
+                        victim = j;
+                    }
+                }
+            }
+            frames[victim] = page;
+            last_used[victim] = timestamp;
             page_faults++;
         }
     }
@@ -81,18 +87,18 @@ int simulate_lru() {
 int simulate_clock() {
     int frames[FRAMES];
     int use_bit[FRAMES];
-    
+
     for (int i = 0; i < FRAMES; i++) {
         frames[i] = -1;
         use_bit[i] = 0;
     }
-    
+
     int page_faults = 0;
     int pointer = 0;
 
     for (int i = 0; i < REFERENCE_STRING_LEN; i++) {
         int page = reference_string[i];
-        
+
         bool found = false;
         for (int j = 0; j < FRAMES; j++) {
             if (frames[j] == page) {
@@ -101,7 +107,7 @@ int simulate_clock() {
                 break;
             }
         }
-        
+
         if (!found) {
             while (true) {
                 if (frames[pointer] == -1 || use_bit[pointer] == 0) {
@@ -111,7 +117,7 @@ int simulate_clock() {
                     page_faults++;
                     break;
                 } else {
-                    use_bit[pointer] = 0; // Second chance
+                    use_bit[pointer] = 0;
                     pointer = (pointer + 1) % FRAMES;
                 }
             }
@@ -127,8 +133,8 @@ int main() {
     }
     printf("\n\n");
 
-    printf("FIFO Page Faults: %d\n", simulate_fifo());
-    printf("LRU Page Faults: %d\n", simulate_lru());
+    printf("FIFO  Page Faults: %d\n", simulate_fifo());
+    printf("LRU   Page Faults: %d\n", simulate_lru());
     printf("Clock Page Faults: %d\n", simulate_clock());
 
     return 0;

@@ -238,13 +238,13 @@ Metrics priority_scheduling(Process procs[], int n) {
 }
 
 int main() {
-    // Example workload
+    // {pid, arrival_time, burst_time, priority}
     Process original_procs[] = {
-        {1, 0, 8, 2},
-        {2, 1, 4, 1},
-        {3, 2, 9, 3},
-        {4, 3, 5, 2},
-        {5, 4, 2, 4}
+        {.pid=1, .arrival_time=0, .burst_time=8, .priority=2},
+        {.pid=2, .arrival_time=1, .burst_time=4, .priority=1},
+        {.pid=3, .arrival_time=2, .burst_time=9, .priority=3},
+        {.pid=4, .arrival_time=3, .burst_time=5, .priority=2},
+        {.pid=5, .arrival_time=4, .burst_time=2, .priority=4}
     };
     int n = sizeof(original_procs) / sizeof(original_procs[0]);
 

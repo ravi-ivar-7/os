@@ -74,25 +74,42 @@ void simulate_crash_and_recover() {
     printf("  [CRASH! Power lost before journal commit was written.]\n");
     // Transaction is NOT committed in journal
 
-    // Recovery
     printf("\n=== System Restart: Running Journal Recovery ===\n");
     FILE *f = fopen(JOURNAL_FILE, "r");
     if (!f) { printf("No journal found. Clean state.\n"); return; }
 
+    // Fix: track per-transaction commit status.
+    // A transaction is incomplete only if it has an uncommitted entry with no
+    // matching committed entry for the same TXN id.
+    int seen_txn[1024] = {0}; // 0=not seen, 1=uncommitted, 2=committed
     char line[512];
-    int found_incomplete = 0;
     printf("Scanning journal...\n");
     while (fgets(line, sizeof(line), f)) {
-        if (strstr(line, "COMMITTED=0")) {
-            printf("  Found uncommitted entry: %s", line);
-            found_incomplete = 1;
+        int txn_id = 0;
+        int committed = 0;
+        if (sscanf(line, "TXN=%d | COMMITTED=%d", &txn_id, &committed) == 2) {
+            if (txn_id > 0 && txn_id < 1024) {
+                if (committed == 1) {
+                    seen_txn[txn_id] = 2; // Committed
+                } else if (seen_txn[txn_id] != 2) {
+                    seen_txn[txn_id] = 1; // Uncommitted (only if not already committed)
+                    printf("  Uncommitted entry found: TXN=%d\n", txn_id);
+                }
+            }
         }
     }
     fclose(f);
 
+    int found_incomplete = 0;
+    for (int i = 1; i < 1024; i++) {
+        if (seen_txn[i] == 1) {
+            printf("  TXN=%d incomplete — rolling back.\n", i);
+            found_incomplete = 1;
+        }
+    }
+
     if (found_incomplete) {
-        printf("\nRecovery: Rolling back uncommitted transactions.\n");
-        printf("Filesystem is now in a consistent state (data was not fully written).\n");
+        printf("\nRecovery complete. Rolled back incomplete transactions. Filesystem consistent.\n");
     } else {
         printf("All transactions were committed. Filesystem is consistent.\n");
     }

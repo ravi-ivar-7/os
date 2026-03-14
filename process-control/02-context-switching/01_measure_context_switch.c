@@ -101,7 +101,7 @@ void demonstrate_voluntary_vs_involuntary() {
     printf("  voluntary_ctxt_switches   - Process blocked (I/O, lock, etc)\n");
     printf("  nonvoluntary_ctxt_switches - Preempted by scheduler\n\n");
 
-    long vol_before, invol_before, vol_after, invol_after;
+    long vol_before = 0, invol_before = 0, vol_after = 0, invol_after = 0;
     FILE *f;
     char line[256];
 

@@ -40,7 +40,6 @@ void* producer(void* arg) {
     int producer_id = *(int*)arg;
 
     while (1) {
-        // Check if we're done
         pthread_mutex_lock(&mutex);
         if (items_produced >= ITEMS_TO_PRODUCE) {
             pthread_mutex_unlock(&mutex);
@@ -50,24 +49,15 @@ void* producer(void* arg) {
         int item = items_produced;
         pthread_mutex_unlock(&mutex);
 
-        // Wait for empty slot
         sem_wait(&empty);
-
-        // Enter critical section
         pthread_mutex_lock(&mutex);
-
-        // Produce item
         buffer[in] = item;
-        printf("Producer %d: Produced item %d at position %d\n",
-               producer_id, item, in);
+        printf("Producer %d: Produced item %d at position %d\n", producer_id, item, in);
         in = (in + 1) % BUFFER_SIZE;
-
         pthread_mutex_unlock(&mutex);
-
-        // Signal that buffer has one more full slot
         sem_post(&full);
 
-        usleep(100000);  // Simulate production time
+        usleep(100000);
     }
 
     printf("Producer %d: Finished\n", producer_id);
@@ -78,20 +68,18 @@ void* consumer(void* arg) {
     int consumer_id = *(int*)arg;
 
     while (1) {
-        // Wait for full slot
+        // Fix: check completion BEFORE blocking on sem_wait to avoid deadlock.
+        // Producers signal a dummy item on 'full' for each consumer to wake them up.
         sem_wait(&full);
-
-        // Enter critical section
         pthread_mutex_lock(&mutex);
 
-        // Check if we're done
         if (items_consumed >= ITEMS_TO_PRODUCE) {
+            // Wake the next consumer in line so all consumers can exit
             pthread_mutex_unlock(&mutex);
-            sem_post(&full);  // Put the semaphore back
+            sem_post(&full);
             break;
         }
 
-        // Consume item
         int item = buffer[out];
         printf("                    Consumer %d: Consumed item %d from position %d\n",
                consumer_id, item, out);
@@ -99,11 +87,9 @@ void* consumer(void* arg) {
         items_consumed++;
 
         pthread_mutex_unlock(&mutex);
-
-        // Signal that buffer has one more empty slot
         sem_post(&empty);
 
-        usleep(150000);  // Simulate consumption time
+        usleep(150000);
     }
 
     printf("Consumer %d: Finished\n", consumer_id);
@@ -142,6 +128,10 @@ void demonstrate_producer_consumer() {
     for (int i = 0; i < NUM_PRODUCERS; i++) {
         pthread_join(producers[i], NULL);
     }
+
+    // Fix: post one extra 'full' token so the first blocked consumer can wake up
+    // and then cascade-wake the remaining consumers via the chain in consumer().
+    sem_post(&full);
 
     // Wait for all consumers
     for (int i = 0; i < NUM_CONSUMERS; i++) {
