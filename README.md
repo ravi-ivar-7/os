@@ -8,7 +8,8 @@ A workspace for learning OS concepts through code examples and experimentation.
 OS/
 ├── process-control/
 ├── memory-management/
-└── file-systems/
+├── file-systems/
+└── io-systems/
 ```
 
 ## Quick Start
@@ -42,12 +43,18 @@ Read [process-control/README.md](process-control/README.md) for more details.
 - Memory-mapped files
 
 ### File Systems
+[Documentation →](file-systems/README.md)
 - Inode structure, directories
 - Allocation methods
 - ext4, FAT internals
 - Journaling, crash recovery
 
-[Documentation →](file-systems/README.md)
+### I/O Systems
+[Documentation →](io-systems/README.md)
+- Interrupts, DMA, polling
+- Device drivers
+- Disk scheduling
+- Block devices
 
 ## Prerequisites
 
