@@ -6,11 +6,9 @@ A workspace for learning OS concepts through code examples and experimentation.
 
 ```text
 OS/
-├── process-control/     [Completed] Process management, scheduling, synchronization
-├── memory-management/   [Completed] Paging, virtual memory, allocators
-├── file-systems/        [Completed] Inodes, allocation, journaling
-├── io-systems/          [Partially Completed] Device drivers, interrupts, DMA
-└── ...more topics
+├── process-control/
+├── memory-management/
+└── file-systems/
 ```
 
 ## Quick Start
@@ -22,41 +20,34 @@ make all
 ./01-process-basics/fork_basics
 ```
 
-Read [process-control/README.md](process-control/README.md) for the full guide.
+Read [process-control/README.md](process-control/README.md) for more details.
 
 ## Topics
 
-### 1. Process Control [Completed]
+### Process Control
 - Process lifecycle, states, fork/exec
 - Context switching mechanics
 - Schedulers (FCFS, SJF, RR, Priority, Linux CFS)
 - IPC (pipes, shared memory, signals)
 - Synchronization (mutex, semaphores, deadlock)
 
-**Time**: 20-30 hours
-**[Start here →](process-control/README.md)**
+[Documentation →](process-control/README.md)
 
-**Memory Management Module**
-**Time**: 15-25 hours
-**[Start here →](memory-management/README.md)**
 
-### 2. Memory Management [Completed]
+### Memory Management
+[Documentation →](memory-management/README.md)
 - Virtual memory, paging, TLB
 - Page replacement (FIFO, LRU, Clock)
 - malloc/free implementation
 - Memory-mapped files
 
-### 3. File Systems [Partially Completed]
+### File Systems
 - Inode structure, directories
 - Allocation methods
 - ext4, FAT internals
 - Journaling, crash recovery
 
-### 4. I/O Systems [Partially Completed]
-- Interrupts, DMA, polling
-- Device drivers
-- Disk scheduling
-- Block devices
+[Documentation →](file-systems/README.md)
 
 ## Prerequisites
 
@@ -70,14 +61,4 @@ Read [process-control/README.md](process-control/README.md) for the full guide.
 sudo apt-get install build-essential gdb valgrind linux-tools-generic
 ```
 
-## Learning Method
-
-1. Read code
-2. Compile: `make`
-3. Run and observe
-4. Modify and experiment
-5. Use system tools: `ps`, `top`, `strace`, `/proc`
-
 ---
-
-**Begin**: [process-control/README.md](process-control/README.md)

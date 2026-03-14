@@ -32,4 +32,4 @@ gcc mmap_demo.c -o mmap_demo
 cat test.txt
 ```
 
-You will observe the program reading the string, making changes via pointer arithmetic (as if it was just memory), and the actual text file on disk (`test.txt`) being modified as a result.
+Observe the program reading the string, making changes via pointer arithmetic (as if it was just memory), and the actual text file on disk (`test.txt`) being modified as a result.

@@ -20,9 +20,9 @@ How operating systems manage multiple processes. The foundation of everything el
 05-synchronization/      Race conditions, mutex, semaphores
 ```
 
-## Learning Path
+## Section Overview
 
-### Week 1: Process Basics
+### Process Basics
 ```bash
 cd 01-process-basics
 make basics
@@ -34,7 +34,7 @@ make basics
 
 **Learn**: Process creation, states (NEW/READY/RUNNING/WAITING/TERMINATED), parent-child, zombies/orphans
 
-### Week 2: Context Switching
+### Context Switching
 ```bash
 cd 02-context-switching
 make context
@@ -43,7 +43,7 @@ make context
 
 **Learn**: What happens during context switch, why it's expensive, voluntary vs involuntary
 
-### Week 3-4: Schedulers (CORE TOPIC)
+### Schedulers
 ```bash
 cd 03-schedulers
 make sched
@@ -54,7 +54,7 @@ Read: [linux_scheduler_analysis.md](03-schedulers/linux_scheduler_analysis.md) -
 
 **Learn**: Scheduling algorithms, trade-offs (fairness vs efficiency), why Linux uses CFS
 
-### Week 5-6: Synchronization (CRITICAL)
+### Synchronization
 ```bash
 cd 05-synchronization
 make sync
@@ -141,48 +141,7 @@ NEW → READY → RUNNING → WAITING → TERMINATED
 
 - C programming (pointers, structs, basic I/O)
 - Linux command line
-- Patience (OS is hard but rewarding)
-
-## Tools
-
-```bash
-# Compile
-gcc program.c -o program -lpthread
-
-# Debug
-gdb ./program
-
-# Trace syscalls
-strace ./program
-
-# Monitor
-ps aux | grep program
-top
-```
-
-## Debugging Tips
-
-```bash
-# Compile with debug symbols
-gcc -g program.c -o program
-
-# GDB basics
-gdb ./program
-(gdb) break main
-(gdb) run
-(gdb) next
-(gdb) print variable
-
-# Find memory leaks
-valgrind --leak-check=full ./program
-
-# See system calls
-strace -c ./program
-```
-
-## Learning Goals
-
-After this module, the goals are to be able to:
+After this section, the goals are to:
 
 1. Explain what happens when running `./program`
 2. Understand every column in `ps aux` output
@@ -219,4 +178,4 @@ After mastering process control:
 
 ---
 
-**Start**: [01-process-basics/README.md](01-process-basics/README.md)
+[01-process-basics/README.md](01-process-basics/README.md)
